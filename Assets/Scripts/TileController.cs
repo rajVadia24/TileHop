@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TileManager : MonoBehaviour
+public class TileController : MonoBehaviour
 {
     [SerializeField] private float _tileSpeed = 5;
 

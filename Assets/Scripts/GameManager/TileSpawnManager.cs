@@ -20,9 +20,9 @@ public class TileSpawnManager : MonoBehaviour
         {
             tile.transform.position = RandomSpawnGenerator().position;            
             tile.SetActive(true);
-         
-            //PlayerController.inst.SetControlPoint(tile.transform.position);
-            //Test.inst.GetEndPoint(tile.transform.position);
+
+            //BallController.inst.SetControlPoint(tile.transform.position);
+           // BallControllerTest.inst.GetEndPosition(tile.transform.position);
         }
     }
 
