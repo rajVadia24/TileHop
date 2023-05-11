@@ -7,7 +7,7 @@ public class ObjectPooling : MonoBehaviour
 
     [SerializeField] private int numberOfObjects;
     [SerializeField] private GameObject prefab;
-    [SerializeField] private List<GameObject> listOfObjects;
+    [SerializeField] public List<GameObject> listOfObjects;
 
     private void Awake()
     {
