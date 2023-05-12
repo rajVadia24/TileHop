@@ -1,9 +1,9 @@
 using UnityEngine;
-using System.Collections.Generic;
+using System.Collections.Generic;   
 
 public class TileSpawnManager : MonoBehaviour
 {
-    public static TileSpawnManager inst;
+    public static TileSpawnManager Inst;
 
     [SerializeField] private Transform _tileSpawnPointLeft;
     [SerializeField] private Transform _tileSpawnPointMiddle;
@@ -13,34 +13,33 @@ public class TileSpawnManager : MonoBehaviour
 
     private void Awake()
     {
-        inst = this;
+        Inst = this;
     }
 
     private void Start()
-    {
-        //SpawnTile();
+    {        
         SpawnTile();        
     }
 
     private void Update()
     {
         if (!IsInvoking(nameof(SpawnTile)))
-            Invoke(nameof(SpawnTile), 0.5f);
+            Invoke(nameof(SpawnTile), 1f);
     }
 
     private void SpawnTile()
-    {        
-        GameObject tile = ObjectPooling.inst.ObjectToPool();
+    {
+        for(int i = 0; i < 8; i++)
+        {            
+            GameObject tile = ObjectPooling.Inst.ObjectToPool();
 
-        if (tile != null)
-        {
-            tile.SetActive(true);
-            tile.transform.position = RandomSpawnGenerator().position;
-            _SpawnedList.Add(tile);
-
-            //BallController.inst.SetControlPoint(tile.transform.position);
-            // BallControllerTest.inst.GetEndPosition(tile.transform.position);
-        }        
+            if (tile != null)
+            {
+                tile.SetActive(true);
+                tile.transform.position = RandomSpawnGenerator().position;
+                _SpawnedList.Add(tile);           
+            }        
+        }
     }
     
     private Transform RandomSpawnGenerator()

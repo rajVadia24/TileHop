@@ -31,16 +31,25 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                     ""name"": ""Movement"",
                     ""type"": ""Value"",
                     ""id"": ""5702ffef-0cd5-41fe-9edd-0d9064ec5233"",
-                    ""expectedControlType"": ""Vector3"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""StartGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""8f8f9017-ef98-480a-ab08-9e399666a40c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": ""Mouse"",
-                    ""id"": ""e0810f9c-4336-4b63-a967-c7ea801d628c"",
+                    ""id"": ""16bfd010-cbeb-4fbc-90ff-ec24659b1ff6"",
                     ""path"": ""OneModifier"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -51,7 +60,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""modifier"",
-                    ""id"": ""3e24ce6d-3349-4bc0-b98c-2dc90cb35b75"",
+                    ""id"": ""3fcf130f-d046-45a8-b9be-ba1010471c3f"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -62,8 +71,8 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""binding"",
-                    ""id"": ""d1be3087-c90e-41b4-b826-39be4dca7157"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""14ce1217-0a24-4086-8b95-7fc9aa12fef3"",
+                    ""path"": ""<Mouse>/delta/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -73,7 +82,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""Touch"",
-                    ""id"": ""7dba7e87-6f56-4988-98aa-d72878015696"",
+                    ""id"": ""f53060ca-7e91-4546-b1ec-f5805a3c49c8"",
                     ""path"": ""OneModifier"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -84,7 +93,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""modifier"",
-                    ""id"": ""b5cbfd03-479c-414b-b49e-58b1b7a73c0f"",
+                    ""id"": ""c2d410d8-5b5e-43b6-8395-86a5c5b93877"",
                     ""path"": ""<Touchscreen>/Press"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -95,14 +104,36 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": ""binding"",
-                    ""id"": ""5d8a6b15-1923-4484-bc22-7b5dbf2b11e7"",
-                    ""path"": ""<Touchscreen>/position"",
+                    ""id"": ""ba8394dd-152b-4492-b4c5-ecc86686df04"",
+                    ""path"": ""<Touchscreen>/delta/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""304ac6c9-b232-4904-90da-04fe9fb8c51d"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d5ace5b3-8291-4440-9a01-d8948e7243a1"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""StartGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -112,6 +143,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
+        m_Player_StartGame = m_Player.FindAction("StartGame", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -174,11 +206,13 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Movement;
+    private readonly InputAction m_Player_StartGame;
     public struct PlayerActions
     {
         private @InputManager m_Wrapper;
         public PlayerActions(@InputManager wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
+        public InputAction @StartGame => m_Wrapper.m_Player_StartGame;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -191,6 +225,9 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
+            @StartGame.started += instance.OnStartGame;
+            @StartGame.performed += instance.OnStartGame;
+            @StartGame.canceled += instance.OnStartGame;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -198,6 +235,9 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
+            @StartGame.started -= instance.OnStartGame;
+            @StartGame.performed -= instance.OnStartGame;
+            @StartGame.canceled -= instance.OnStartGame;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -218,5 +258,6 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMovement(InputAction.CallbackContext context);
+        void OnStartGame(InputAction.CallbackContext context);
     }
 }

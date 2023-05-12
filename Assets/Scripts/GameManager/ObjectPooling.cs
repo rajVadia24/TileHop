@@ -3,15 +3,16 @@ using UnityEngine;
 
 public class ObjectPooling : MonoBehaviour
 {
-    public static ObjectPooling inst;
+    public static ObjectPooling Inst;
 
-    [SerializeField] private int numberOfObjects;
-    [SerializeField] private GameObject prefab;
-    [SerializeField] public List<GameObject> listOfObjects;
+    [SerializeField] private int _numberOfEachObject;    
+    [SerializeField] private GameObject[] _prefabs;    
+
+    public List<GameObject> ListOfObjects;
 
     private void Awake()
     {
-        inst = this;
+        Inst = this;
     }
 
     private void Start()
@@ -21,24 +22,27 @@ public class ObjectPooling : MonoBehaviour
 
     public void CreateObjects()
     {
-        listOfObjects = new();
+        ListOfObjects = new();
         GameObject tmp;
 
-        for (int i = 0; i < numberOfObjects; i++)
+        for (int i = 0; i < _numberOfEachObject; i++)
         {
-            tmp = Instantiate(prefab);
-            tmp.SetActive(false);
-            listOfObjects.Add(tmp);
+            for(int j = 0; j < _prefabs.Length; j++)
+            {
+                tmp = Instantiate(_prefabs[j]);
+                tmp.SetActive(false);
+                ListOfObjects.Add(tmp);
+            }
         }
-    }
+    }   
 
     public GameObject ObjectToPool()
     {
-        for (int i = 0; i < numberOfObjects; i++)
+        for (int i = 0; i < ListOfObjects.Count; i++)
         {
-            if (!listOfObjects[i].activeInHierarchy)
+            if (!ListOfObjects[i].activeInHierarchy)
             {
-                return listOfObjects[i];
+                return ListOfObjects[i];
             }
         }
         return null;

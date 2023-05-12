@@ -2,89 +2,119 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.InputSystem;
 
 public class TestBall : MonoBehaviour
 {
-    public static TestBall inst;
+    public static TestBall Inst;
+
+    private InputManager _inputManager;
 
     [SerializeField] private float _mouseSpeed;
-    private Vector3 StartPosition;
-    private Vector3 EndPosition;
-    public Vector3 NextPosition;
-    public float Height;
-    public float Duration;
-    private float startTime;
-    public Camera _mainCamera;
+    [SerializeField] private float _height;
+    [SerializeField] private float _duration;
+    [SerializeField] private Camera _mainCamera;
+
+    private Vector3 _startPosition;
+    private Vector3 _endPosition;
+    private Vector3 _nextPosition;
+
+    private float _startTime;
 
     private bool isPlaying;
+    public bool isStopped;
+    private bool isColliding;
 
     private void Awake()
     {
-        inst = this;
-    }    
+        Inst = this;
+        _inputManager = new();
+    }
 
-    private void Start()
-    {                
-        startTime = Time.time;
-        StartPosition = transform.position;
-        EndPosition = transform.position;
+    private void OnEnable()
+    {
+        _inputManager.Player.Enable();
+        _inputManager.Player.Movement.performed += ControlBallViaInput;
+        _inputManager.Player.StartGame.started += StartGame;
+    }
+
+    private void OnDisable()
+    {
+        _inputManager.Player.Disable();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            StartGame();
+        GameOver();    
     }
 
     private void FixedUpdate()
-    {
-        MoveBall();
-
+    {           
         if(isPlaying)
             MoveTowardsTile();
     }
 
-    public void GetNextTilePosition(Vector3 nextTile)
+    private void StartGame(InputAction.CallbackContext context)
     {
-        startTime = Time.time;
-        StartPosition = transform.position;
-        EndPosition = nextTile;
-        Debug.Log("TestBallTile: " + EndPosition);
+        _inputManager.Player.StartGame.Disable();
+        isPlaying = true;
+        _startTime = Time.time;
+        _endPosition = ObjectPooling.Inst.ListOfObjects[0].transform.position;
     }
 
-    private void StartGame()
+    private void ControlBallViaInput(InputAction.CallbackContext context)
     {
-        isPlaying = true;
-        startTime = Time.time;
-        EndPosition = ObjectPooling.inst.listOfObjects[0].transform.position;
+        float input = context.ReadValue<float>();
+
+        if (0 > input)
+            transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.right);
+
+        else if (0 < input)
+            transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.left);
+    }
+
+    public void GetNextTilePosition(Vector3 nextTile)
+    {
+        _startTime = Time.time;
+        _startPosition = transform.position;
+        _endPosition = nextTile;
+        Debug.Log("TestBallTile: " + _endPosition);
     }
 
     private void MoveTowardsTile()
     {        
-        float timeFraction = Mathf.Clamp01((Time.time - startTime) / Duration);
-        float currentHeight = Height * (timeFraction - timeFraction * timeFraction);
-        Vector3 moveTowardsTile = Vector3.Lerp(StartPosition, EndPosition, timeFraction) + Vector3.up * currentHeight;
+        float timeFraction = Mathf.Clamp01((Time.time - _startTime) / _duration);
+        float currentHeight = _height * (timeFraction - timeFraction * timeFraction);
+        Vector3 moveTowardsTile = Vector3.Lerp(_startPosition, _endPosition, timeFraction) + Vector3.up * currentHeight;
         transform.position = new Vector3(transform.position.x , moveTowardsTile.y, moveTowardsTile.z);
 
-        Debug.Log("EndPosition: " + EndPosition);
-        if (transform.position == EndPosition)
+        Debug.Log("EndPosition: " + _endPosition);
+        if (transform.position == _endPosition)
         {
-            StartPosition = EndPosition;
+            _startPosition = _endPosition;
+        }
+
+        if (timeFraction == 1)        
+            isStopped = true;        
+        else
+            isStopped = false;
+    }
+
+    private void GameOver()
+    {
+        if(isStopped == true && isColliding == false)
+        {
+            Debug.LogError("Game Over");
         }
     }
 
-    private void MoveBall()
+    private void OnCollisionEnter(Collision collision)
     {
-        if (Input.GetMouseButton(0))
-        {
-            if( 0 > Input.GetAxis("Mouse X"))
-            {
-                transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.right);
-            }
-            else if ( 0 < Input.GetAxis("Mouse X"))
-            {
-                transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.left);
-            }
-        }
-    }   
+        isColliding = true;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        isColliding = false;
+    }
 }
