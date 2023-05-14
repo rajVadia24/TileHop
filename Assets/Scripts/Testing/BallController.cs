@@ -1,29 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
 using UnityEngine.InputSystem;
 
-public class TestBall : MonoBehaviour
+public class BallController : MonoBehaviour
 {
-    public static TestBall Inst;
+    public static BallController Inst;
 
     private InputManager _inputManager;
 
     [SerializeField] private float _mouseSpeed;
-    [SerializeField] private float _height;
-    [SerializeField] private float _duration;
+    [SerializeField] private float _height;    
+    [SerializeField] private float _constantSpeed;
     [SerializeField] private Camera _mainCamera;
 
     private Vector3 _startPosition;
-    private Vector3 _endPosition;
-    private Vector3 _nextPosition;
+    private Vector3 _endPosition;    
 
     private float _startTime;
+    private float _timeFraction;
+    private float _distance;
 
-    private bool isPlaying;
-    public bool isStopped;
-    private bool isColliding;
+    private bool isPlaying;    
+    private bool isColliding;    
+
+    public float Distance { get => _distance; }
+    public float StartTime { get => _startTime; }
+    public float ConstantSpeed { get => _constantSpeed; set => _constantSpeed = value; }
 
     private void Awake()
     {
@@ -59,6 +60,7 @@ public class TestBall : MonoBehaviour
         _inputManager.Player.StartGame.Disable();
         isPlaying = true;
         _startTime = Time.time;
+        //_endPosition = ObjectPooling.Inst.ListOfObjects[0].transform.position;
         _endPosition = ObjectPooling.Inst.ListOfObjects[0].transform.position;
     }
 
@@ -66,43 +68,48 @@ public class TestBall : MonoBehaviour
     {
         float input = context.ReadValue<float>();
 
-        if (0 > input)
-            transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.right);
+        float horizontalMovement = -input * _mouseSpeed * Time.deltaTime;
 
-        else if (0 < input)
-            transform.Translate(_mouseSpeed * Time.deltaTime * Vector2.left);
-    }
+        // Move the ball horizontally
+        transform.Translate(horizontalMovement, 0f, 0f);
+    }    
 
     public void GetNextTilePosition(Vector3 nextTile)
     {
         _startTime = Time.time;
         _startPosition = transform.position;
         _endPosition = nextTile;
-        Debug.Log("TestBallTile: " + _endPosition);
+        //Debug.Log("TestBallTile: " + _endPosition);
     }
 
     private void MoveTowardsTile()
-    {        
-        float timeFraction = Mathf.Clamp01((Time.time - _startTime) / _duration);
-        float currentHeight = _height * (timeFraction - timeFraction * timeFraction);
-        Vector3 moveTowardsTile = Vector3.Lerp(_startPosition, _endPosition, timeFraction) + Vector3.up * currentHeight;
-        transform.position = new Vector3(transform.position.x , moveTowardsTile.y, moveTowardsTile.z);
+    {
+        _distance = Vector3.Distance(_startPosition, _endPosition);
 
-        Debug.Log("EndPosition: " + _endPosition);
+        if (_distance < 2)
+        {
+            _height = 0.7f;
+            if (_distance < 1) { _height = 0.6f; }
+        }
+        else { _height = 1f; }
+
+        float totalTime = _distance / ConstantSpeed;
+
+        _timeFraction = Mathf.Clamp01((Time.time - _startTime) / totalTime);
+        float currentHeight = _height * (_timeFraction - _timeFraction * _timeFraction);
+        Vector3 moveTowardsTile = Vector3.Lerp(_startPosition, _endPosition, _timeFraction) + Vector3.up * currentHeight;
+        transform.position = new Vector3(transform.position.x, moveTowardsTile.y, moveTowardsTile.z);
+
+        //Debug.Log("EndPosition: " + _endPosition);
         if (transform.position == _endPosition)
         {
             _startPosition = _endPosition;
         }
-
-        if (timeFraction == 1)        
-            isStopped = true;        
-        else
-            isStopped = false;
     }
 
     private void GameOver()
     {
-        if(isStopped == true && isColliding == false)
+        if(_timeFraction == 1 && isColliding == false)
         {
             Debug.LogError("Game Over");
         }
@@ -116,5 +123,5 @@ public class TestBall : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         isColliding = false;
-    }
+    }  
 }
