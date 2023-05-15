@@ -1,11 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    public static DataManager Inst;
+    //public static DataManager Inst;
 
     public PlayerData playerData;    
 
@@ -15,7 +14,7 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        Inst = this;
+        //Inst = this;
         Path = Application.persistentDataPath + "TilesHop.json";
     }
 

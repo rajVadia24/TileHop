@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AddSong", menuName = "SongName")]
-public class AddSong : ScriptableObject
+public class AddSongData : ScriptableObject
 {
     public string SongName;
     public int Points;

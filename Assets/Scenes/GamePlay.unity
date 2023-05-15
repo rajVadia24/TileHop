@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028355, g: 0.22571374, b: 0.30692255, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.2257134, b: 0.30692226, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -374,8 +374,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   screenType: 1
-  _score: {fileID: 1972167947}
-  _highScore: {fileID: 1075502854}
 --- !u!1 &112358856
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,6 +937,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6022d2151fef2147be6dcd18ed367eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreData: {fileID: 11400000, guid: 45ce4b50363c35d44ab8fdd193a628cb, type: 2}
   _scoreText: {fileID: 1972167947}
 --- !u!4 &352965540
 Transform:
@@ -3139,6 +3138,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   screenType: 2
+  scoreData: {fileID: 11400000, guid: 45ce4b50363c35d44ab8fdd193a628cb, type: 2}
+  Score: {fileID: 1944555848}
 --- !u!1 &1333550860
 GameObject:
   m_ObjectHideFlags: 0
@@ -5007,6 +5008,7 @@ MonoBehaviour:
   - {fileID: 28855276}
   - {fileID: 1331750938}
   CurrentScreen: {fileID: 915959388}
+  gamePlayPage: {fileID: 0}
 --- !u!4 &1993790962
 Transform:
   m_ObjectHideFlags: 0
