@@ -14,6 +14,7 @@ public class BallController : MonoBehaviour
     [SerializeField] private float _height;    
     [SerializeField] private float _constantSpeed;
     [SerializeField] private Camera _mainCamera;
+    [SerializeField] private GameObject _startTile;
 
     private Vector3 _startPosition;
     private Vector3 _endPosition;    
@@ -57,12 +58,7 @@ public class BallController : MonoBehaviour
         _inputManager.Player.Disable();
         _inputManager.Player.Movement.performed -= ControlBallViaInput;
         _inputManager.Player.StartGame.started -= StartGame;
-    }
-
-    private void Update()
-    {
-        GameOver();    
-    }
+    }    
 
     private void FixedUpdate()
     {
@@ -86,6 +82,7 @@ public class BallController : MonoBehaviour
 
     private void ControlBallViaInput(InputAction.CallbackContext context)
     {
+        Debug.Log("Input Working");
         float input = context.ReadValue<float>();
 
         float horizontalMovement = -input * _mouseSpeed * Time.deltaTime;
@@ -125,29 +122,36 @@ public class BallController : MonoBehaviour
         {
             _startPosition = _endPosition;
         }
+
+        if (_timeFraction == 1 && !isColliding)
+        {
+            GameOver();
+        }
     }
 
     private void GameOver()
-    {
-        if(_timeFraction == 1 && isColliding == false)
-        {
-            Debug.LogError("Game Over");
-            _inputManager.Player.Disable();
-            OnMovingToTile -= OnMovingToTile;
-            rb.useGravity = true;
-            AudioManager.Inst.StopSound();
-            ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
-        }
+    {        
+        Debug.LogError("Game Over");
+        isPlaying = false;
+        _inputManager.Player.Disable();
+        OnMovingToTile -= OnMovingToTile;
+        rb.useGravity = true;
+        //AudioManager.Inst.StopSound();
+        ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
+        ScreenManager.Inst.GameOverObj.DisplayScore();        
     }
 
     public void Restart()
     {
         Debug.Log("Restart");
+        _timeFraction = 0;
+        isPlaying = false;
         rb.useGravity = false;
-        transform.position = Vector3.zero;
+        _startTile.transform.position = Vector3.zero;
+        transform.position = Vector3.zero + Vector3.up;
         _inputManager.Player.Enable();
         OnMovingToTile += OnMovingToTile;
-        ScreenManager.Inst.ShowNextScreen(ScreenType.GamePlayScreen);
+        _inputManager.Player.StartGame.Enable();
     }
 
     private void OnCollisionEnter(Collision collision)

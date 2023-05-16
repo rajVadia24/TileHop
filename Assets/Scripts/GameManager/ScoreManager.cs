@@ -5,13 +5,15 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Inst;
 
-    public StoreScoreData scoreData;
+    public StoreScoreData scoreData;   
 
-    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _scoreText;    
 
     private int _score = 0;
-
-    public int Score { get { return scoreData.Score; } set { scoreData.Score = value; } }
+    private int _highScore;
+    
+    public int Score { get { return _score; } set { _score = value; if (_score > scoreData.HighScore) { scoreData.HighScore = _score; } } }
+    public int HighScore { get { return scoreData.HighScore; } set { _highScore = value; } }
 
     private void Awake()
     {
@@ -19,15 +21,13 @@ public class ScoreManager : MonoBehaviour
     }
 
     private void Start()
-    {
-        Score = 0;
-        _scoreText.text = "Score: " + Score;
-    }
+    {        
+        _scoreText.text = "Score: " + Score;        
+    }        
 
     private void Update()
     {
-        _scoreText.text = "Score: " + Score;
-        Debug.Log("ScoreData ==> " + scoreData.Score);
+        _scoreText.text = "Score: " + Score;                
 
         if(Score == 10){ BallController.Inst.ConstantSpeed = 1.8f; Debug.Log("Score is 10%"); }
         else if(Score == 30) { BallController.Inst.ConstantSpeed = 2.1f; Debug.Log("Score is 30%"); }

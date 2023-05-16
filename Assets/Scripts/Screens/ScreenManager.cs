@@ -5,8 +5,8 @@ public class ScreenManager : MonoBehaviour
     public BaseClass[] Screens;
 
     public BaseClass CurrentScreen;
-
-    public GamePlayPage gamePlayPage;
+    
+    public GameOverPanel GameOverObj;
 
     public static ScreenManager Inst;
 
@@ -39,6 +39,6 @@ public class ScreenManager : MonoBehaviour
         {
             AudioManager.Inst.StopSound();
             BallController.Inst.enabled = true;
-        }
+        }        
     }
 }
