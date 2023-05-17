@@ -1,20 +1,20 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class BallController : MonoBehaviour
 {
     public static BallController Inst;
 
-    private InputManager _inputManager;
-
-    private Rigidbody rb;
+    private InputManager _inputManager;    
 
     [SerializeField] private float _mouseSpeed;
     [SerializeField] private float _height;    
     [SerializeField] private float _constantSpeed;
     [SerializeField] private Camera _mainCamera;
     [SerializeField] private GameObject _startTile;
+    [SerializeField] private Slider _sensitivitySlider;
 
     private Vector3 _startPosition;
     private Vector3 _endPosition;    
@@ -26,7 +26,7 @@ public class BallController : MonoBehaviour
     private bool isPlaying;    
     private bool isColliding;
 
-    private SoundNames _songName;
+    private AudioTrack _songName;
 
     public float Distance { get => _distance; }
     public float StartTime { get => _startTime; }
@@ -39,11 +39,10 @@ public class BallController : MonoBehaviour
         Inst = this;
         _inputManager = new();
     }
-
+   
     private void Start()
     {
-        OnMovingToTile += MoveTowardsTile;
-        rb = GetComponent<Rigidbody>();        
+        OnMovingToTile += MoveTowardsTile;               
     }
 
     private void OnEnable()
@@ -58,8 +57,8 @@ public class BallController : MonoBehaviour
         _inputManager.Player.Disable();
         _inputManager.Player.Movement.performed -= ControlBallViaInput;
         _inputManager.Player.StartGame.started -= StartGame;
-    }    
-
+    }
+   
     private void FixedUpdate()
     {
         if (isPlaying)
@@ -69,46 +68,55 @@ public class BallController : MonoBehaviour
     private void StartGame(InputAction.CallbackContext context)
     {
         _inputManager.Player.StartGame.Disable();
+        Debug.Log("STARTED GAME");
         isPlaying = true;
-        _startTime = Time.time;        
-        _endPosition = ObjectPooling.Inst.ListOfObjects[0].transform.position;        
+        _startTime = Time.time;
+        _startPosition = transform.position;
+        _endPosition = SpawnManager.Inst.SpawnedList[0].transform.position;        
         AudioManager.Inst.PlaySound(_songName);
     }
 
-    public void SoundToPlay(SoundNames song)
+    public void SoundToPlay(AudioTrack song)
     {
         _songName = song;
-    }
+    }    
 
     private void ControlBallViaInput(InputAction.CallbackContext context)
     {
         Debug.Log("Input Working");
-        float input = context.ReadValue<float>();
+        Vector2 input = context.ReadValue<Vector2>();
 
-        float horizontalMovement = -input * _mouseSpeed * Time.deltaTime;
+        float horizontalMovement = -input.x * _sensitivitySlider.value * Time.deltaTime;
 
-        // Move the ball horizontally
-        transform.Translate(horizontalMovement, 0f, 0f);
-    }    
+        Vector3 newPosition = transform.position + new Vector3(horizontalMovement, 0f, 0f);        
+        Vector3 viewportPosition = _mainCamera.WorldToViewportPoint(newPosition);
+        
+        float clampedX = Mathf.Clamp01(viewportPosition.x);
+        float clampedY = Mathf.Clamp01(viewportPosition.y);
+        
+        Vector3 clampedPosition = _mainCamera.ViewportToWorldPoint(new Vector3(clampedX, clampedY, viewportPosition.z));
+
+        transform.position = clampedPosition;
+    }
 
     public void GetNextTilePosition(Vector3 nextTile)
     {
         _startTime = Time.time;
         _startPosition = transform.position;
-        _endPosition = nextTile;
-        //Debug.Log("TestBallTile: " + _endPosition);
+        _endPosition = nextTile;        
     }
 
     private void MoveTowardsTile()
     {
+        Debug.Log("MOVING");
         _distance = Vector3.Distance(_startPosition, _endPosition);
 
         if (_distance < 2)
         {
-            _height = 1.1f;
-            if (_distance < 1) { _height = 0.9f; }
+            _height = 1.2f;
+            if (_distance < 1) { _height = 1f; }
         }
-        else { _height = 2f; }
+        else { _height = 1.6f; }
 
         float totalTime = _distance / ConstantSpeed;
 
@@ -128,30 +136,35 @@ public class BallController : MonoBehaviour
             GameOver();
         }
     }
-
+    
     private void GameOver()
     {        
         Debug.LogError("Game Over");
         isPlaying = false;
         _inputManager.Player.Disable();
-        OnMovingToTile -= OnMovingToTile;
-        rb.useGravity = true;
-        //AudioManager.Inst.StopSound();
+        OnMovingToTile -= MoveTowardsTile;
+        AudioManager.Inst.StopSound();
         ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
-        ScreenManager.Inst.GameOverObj.DisplayScore();        
+        ScreenManager.Inst.GameOverObj.DisplayScore();
+        //SpawnManager.Inst.enabled = false;
     }
 
     public void Restart()
     {
+        ConstantSpeed = 1.5f;
+        OnMovingToTile += MoveTowardsTile;
+        _inputManager.Player.StartGame.Enable();              
         Debug.Log("Restart");
         _timeFraction = 0;
-        isPlaying = false;
-        rb.useGravity = false;
         _startTile.transform.position = Vector3.zero;
-        transform.position = Vector3.zero + Vector3.up;
+        Vector3 ballStartPosition = _startTile.transform.position;
+        transform.position = ballStartPosition;
         _inputManager.Player.Enable();
-        OnMovingToTile += OnMovingToTile;
-        _inputManager.Player.StartGame.Enable();
+        //SpawnManager.Inst.enabled = true;
+        SpawnManager.Inst.ResetSpawnPoints();
+        SpawnManager.Inst.ResetSpawnedTiles();
+        SpawnManager.Inst.OnSpawnTile.Invoke();
+        ScoreManager.Inst.Score = 0;
     }
 
     private void OnCollisionEnter(Collision collision)

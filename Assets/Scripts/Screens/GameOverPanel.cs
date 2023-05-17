@@ -1,10 +1,9 @@
-using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameOverPanel : BaseClass
-{    
+{        
     [SerializeField] private TMP_Text _score;
     [SerializeField] private TMP_Text _highScore;
     [SerializeField] private Button _restartButton;
@@ -24,8 +23,9 @@ public class GameOverPanel : BaseClass
 
     public void OnClick_MainMenuButton()
     {
-        DataManager.Inst.AddPlayerScore(ScoreManager.Inst.Score.ToString(), ScoreManager.Inst.HighScore.ToString());
-        ScreenManager.Inst.ShowNextScreen(ScreenType.HomeScreen);                
+        DataManager.Inst.AddPlayerScore(ScoreManager.Inst.HighScore);
+        ScreenManager.Inst.ShowNextScreen(ScreenType.HomeScreen);
+        BallController.Inst.Restart();        
     }
 
     private void OnClick_RestartButton()

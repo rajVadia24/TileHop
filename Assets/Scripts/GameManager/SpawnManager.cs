@@ -1,98 +1,98 @@
 using UnityEngine;
-using System.Collections.Generic;   
+using System;
+using System.Collections.Generic;
 
 public class SpawnManager : MonoBehaviour
 {
     public static SpawnManager Inst;
 
+    public Action OnSpawnTile;
+
     [SerializeField] private Transform _tileSpawnPointLeft;
     [SerializeField] private Transform _tileSpawnPointMiddle;
     [SerializeField] private Transform _tileSpawnPointRight;
+
+    public List<GameObject> SpawnedList;
+    private List<Vector3> _initialSpawnPointPositions;
 
     private int _nextBeatIndex = 0;
 
     public int NextBeatIndex { get => _nextBeatIndex; set => _nextBeatIndex = value; }
 
-
-    public List<GameObject> _SpawnedList;
-
     private void Awake()
     {
         Inst = this;
+        SpawnedList = new List<GameObject>();
+        _initialSpawnPointPositions = new List<Vector3>();
+        InitializeSpawnPointPositions();
     }
 
     private void Start()
-    {        
-        SpawnTile();        
+    {
+        SpawnTile();
+    }
+
+    private void OnEnable()
+    {
+        OnSpawnTile += SpawnTile;
     }
 
     private void Update()
     {
-        if (!IsInvoking(nameof(SpawnTile)))
-            Invoke(nameof(SpawnTile), 1f);
+       // if (!IsInvoking(nameof(SpawnTile)))
+         //   Invoke(nameof(SpawnTile), 1f);
+    }
+
+    private void InitializeSpawnPointPositions()
+    {
+        _initialSpawnPointPositions.Add(_tileSpawnPointLeft.position);
+        _initialSpawnPointPositions.Add(_tileSpawnPointMiddle.position);
+        _initialSpawnPointPositions.Add(_tileSpawnPointRight.position);
     }
 
     private void SpawnTile()
     {
-        for(int i = 0; i < 8; i++)
-        {            
+        for (int i = 0; i < 8; i++)
+        {
             GameObject tile = ObjectPooling.Inst.ObjectToPool();
 
             if (tile != null)
             {
                 tile.SetActive(true);
                 tile.transform.position = RandomSpawnGenerator().position;
-                _SpawnedList.Add(tile);           
-            }        
+                SpawnedList.Add(tile);
+            }
         }
     }
 
     private Transform RandomSpawnGenerator()
     {
-        float randomSpeed = Random.Range(0.5f, 3);
-        _tileSpawnPointLeft.position += Vector3.back * randomSpeed;
-        _tileSpawnPointMiddle.position += Vector3.back * randomSpeed;
-        _tileSpawnPointRight.position += Vector3.back * randomSpeed;
+        float randomSpeed = UnityEngine.Random.Range(0.5f, 2);
+        Vector3 newPosition = Vector3.back * randomSpeed;
+        _tileSpawnPointLeft.position += newPosition;
+        _tileSpawnPointMiddle.position += newPosition;
+        _tileSpawnPointRight.position += newPosition;
 
         Transform[] transformArray = { _tileSpawnPointLeft, _tileSpawnPointMiddle, _tileSpawnPointRight };
-        int randomTransformPoint = Random.Range(0, transformArray.Length);
+        int randomTransformPoint = UnityEngine.Random.Range(0, transformArray.Length);
         return transformArray[randomTransformPoint];
     }
 
-    //public Transform BeatBasedSpawnGenerator()
-    //{
-    //    Transform[] transformArray = { _tileSpawnPointLeft, _tileSpawnPointMiddle, _tileSpawnPointRight };
+    public void ResetSpawnPoints()
+    {
+        _tileSpawnPointLeft.position = _initialSpawnPointPositions[0];
+        _tileSpawnPointMiddle.position = _initialSpawnPointPositions[1];
+        _tileSpawnPointRight.position = _initialSpawnPointPositions[2];
+    }
 
-    //    // Use the next beat time
-    //    float nextBeatTime = BeatDetector.Inst.BeatTimes[_nextBeatIndex];
-
-    //    // Calculate the time until the next beat
-    //    float timeUntilNextBeat = nextBeatTime - (Time.time - BallController.Inst.StartTime);
-
-    //    // If the time until the next beat is negative, that means we missed the beat,
-    //    // so we should use the next beat time instead
-    //    if (timeUntilNextBeat < 0)
-    //    {
-    //        _nextBeatIndex++;
-    //        if (_nextBeatIndex >= BeatDetector.Inst.BeatTimes.Length)
-    //        {
-    //            _nextBeatIndex = 0;
-    //        }
-    //        nextBeatTime = BeatDetector.Inst.BeatTimes[_nextBeatIndex];
-    //        timeUntilNextBeat = nextBeatTime - (Time.time - BallController.Inst.StartTime);
-    //    }
-
-    //    // Calculate the speed based on the time until the next beat
-    //    float speed = BallController.Inst.Distance / timeUntilNextBeat;
-
-    //    // Move the spawn points based on the speed
-    //    _tileSpawnPointLeft.position += Vector3.back * speed;
-    //    _tileSpawnPointMiddle.position += Vector3.back * speed;
-    //    _tileSpawnPointRight.position += Vector3.back * speed;
-
-    //    // Choose a random spawn point
-    //    int randomTransformPoint = Random.Range(0, transformArray.Length);
-    //    return transformArray[randomTransformPoint];
-    //}
-
+    public void ResetSpawnedTiles()
+    {
+        foreach (GameObject tile in SpawnedList)
+        {
+            tile.SetActive(false);
+        }
+        SpawnedList.Clear();
+    }
 }
+
+

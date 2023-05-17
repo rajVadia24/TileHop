@@ -14,6 +14,7 @@ public class BaseClass : MonoBehaviour
     private void Awake()
     {
         Inst = this;
+            
         canvas = GetComponent<Canvas>();
         canvas.enabled = false;
     }

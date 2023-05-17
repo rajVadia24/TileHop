@@ -226,10 +226,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faa46725e82fc4cab951e6e172829c5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  song: {fileID: 11400000, guid: 7ccda16ad4953484f9294a16600b499e, type: 2}
-  _songName: {fileID: 6347076249239703272}
-  _songImage: {fileID: 6347076247861929783}
-  _score: {fileID: 6347076248566576990}
+  SongName: {fileID: 6347076249239703272}
+  SongImage: {fileID: 6347076247861929783}
+  HighScore: {fileID: 6347076248566576990}
   _playGameButton: {fileID: 6347076248500360224}
 --- !u!1 &6347076248500360226
 GameObject:

@@ -6,15 +6,15 @@ public class TileController : MonoBehaviour
          
     private GameObject NextTilePosition()
     {
-        int lenght = SpawnManager.Inst._SpawnedList.Count;
+        int lenght = SpawnManager.Inst.SpawnedList.Count;
 
         for(int i = 0; i < lenght; i++)
         {
-            if(SpawnManager.Inst._SpawnedList[i] == _parent)
+            if(SpawnManager.Inst.SpawnedList[i] == _parent)
             {
-                GameObject currentTilePosition = SpawnManager.Inst._SpawnedList[i];                
+                //GameObject currentTilePosition = SpawnManager.Inst.SpawnedList[i];                
                 //Debug.Log("Current Tile: " + i +"-" + _parent.transform.position);
-                GameObject nextTile = SpawnManager.Inst._SpawnedList[i + 1];                
+                GameObject nextTile = SpawnManager.Inst.SpawnedList[i + 1];                
                 //Debug.Log("Next Tile: " + (i + 1) + "-" + nextTile.transform.position);
                 return nextTile;
             }            
@@ -34,8 +34,9 @@ public class TileController : MonoBehaviour
             ScoreManager.Inst.Score += 1;
             //Debug.Log("Player Hit");
             BallController.Inst.GetNextTilePosition(NextTilePosition().transform.position);
-            SpawnManager.Inst._SpawnedList.Remove(_parent);
-            Invoke(nameof(ReUseTile), 1);            
+            SpawnManager.Inst.SpawnedList.Remove(_parent);
+            Invoke(nameof(ReUseTile), 1);
+            SpawnManager.Inst.OnSpawnTile.Invoke();
         }
     }    
 }

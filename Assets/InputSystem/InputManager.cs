@@ -72,7 +72,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""binding"",
                     ""id"": ""14ce1217-0a24-4086-8b95-7fc9aa12fef3"",
-                    ""path"": ""<Mouse>/delta/x"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -105,7 +105,7 @@ public partial class @InputManager: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""binding"",
                     ""id"": ""ba8394dd-152b-4492-b4c5-ecc86686df04"",
-                    ""path"": ""<Touchscreen>/delta/x"",
+                    ""path"": ""<Touchscreen>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

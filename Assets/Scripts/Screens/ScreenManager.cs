@@ -12,33 +12,48 @@ public class ScreenManager : MonoBehaviour
 
     private void Awake()
     {
-        Inst = this;
+        if(Inst != null && Inst != this)
+        {
+            Destroy(Inst);
+            return;
+        }
+        else
+            Inst = this;
     }
 
     private void Start()
     {
-        CurrentScreen.canvas.enabled = true;
+        if(CurrentScreen != null)
+            CurrentScreen.canvas.enabled = true;
     }
 
     public void ShowNextScreen(ScreenType screenType)
     {
-        CurrentScreen.canvas.enabled = false;
+        if (CurrentScreen != null)
+            CurrentScreen.canvas.enabled = false;
 
         foreach (BaseClass baseScreen in Screens)
         {
             if (baseScreen.screenType == screenType)
             {
                 baseScreen.canvas.enabled = true;
+                CurrentScreen = baseScreen;
                 break;
             }
 
-            CurrentScreen = baseScreen;
         }
 
         if(screenType == ScreenType.GamePlayScreen)
         {
             AudioManager.Inst.StopSound();
             BallController.Inst.enabled = true;
-        }        
+        }
+        else if(screenType == ScreenType.HomeScreen)
+        {
+            BallController.Inst.enabled = false;
+            //DataManager.Inst.DisplaySongPanel();
+            //DataManager.Inst.SaveJsonData();
+            //DataManager.Inst.LoadJsonData();
+        }
     }
 }

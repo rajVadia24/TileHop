@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class AddSongData : ScriptableObject
 {
     public string SongName;
-    public int Score;
+    public int HighScore;
     public Sprite SongImage;
+    public AudioTrack audioTrack;
 }

@@ -4,9 +4,9 @@ using UnityEngine.UI;
 
 public class SongPanel : MonoBehaviour
 {
-    public TMP_Text _songName;
-    public Image _songImage;
-    [SerializeField] private TMP_Text _score;
+    public TMP_Text SongName;
+    public Image SongImage;
+    public TMP_Text HighScore;    
     [SerializeField] private Button _playGameButton;
 
     private void Start()
@@ -16,7 +16,8 @@ public class SongPanel : MonoBehaviour
 
     private void OnClick_PlayGameButton()
     {
-        DataManager.Inst.CurrentSong(_songName.text);
+        DataManager.Inst.CurrentSong(SongName.text);
+        DataManager.Inst.AddDataFromSO();        
         ScreenManager.Inst.ShowNextScreen(ScreenType.GamePlayScreen);
     }
 }
