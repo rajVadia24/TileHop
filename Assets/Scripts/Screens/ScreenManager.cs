@@ -51,6 +51,7 @@ public class ScreenManager : MonoBehaviour
         else if(screenType == ScreenType.HomeScreen)
         {
             BallController.Inst.enabled = false;
+            DataManager.Inst.DisplayNewData();            
             //DataManager.Inst.DisplaySongPanel();
             //DataManager.Inst.SaveJsonData();
             //DataManager.Inst.LoadJsonData();

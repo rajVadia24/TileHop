@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: UnderTale
   m_EditorClassIdentifier: 
   SongName: UnderTale
-  HighScore: 0
-  SongImage: {fileID: 21300000, guid: 5955491dc8dcecb4a993d9a008cf65a7, type: 3}
+  HighScore: 5
+  SongImage: {fileID: 0}
   audioTrack: 1

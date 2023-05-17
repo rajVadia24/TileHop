@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DataManager : MonoBehaviour
 {
@@ -10,132 +11,126 @@ public class DataManager : MonoBehaviour
     [SerializeField] private GameObject _songPanel;
 
     public List<AddSongData> So_SongData;    
+    private List<GameObject> _clonedPrefabs = new();
 
-    //public PlayerData playerData;
+    public GameData gameData;
 
     private static string Path;
 
-    private string _currentSong;
-
+    private string _currentSong;    
 
     private void Awake()
-    {
-        //if (Inst == null)
-        //{
-            Inst = this;
-        //    DontDestroyOnLoad(this);
-        //}
-        //else
-        //    Destroy(gameObject);
-
-        Path = Application.persistentDataPath + "TilesHop.json";
+    {        
+        Inst = this;
+        Path = Application.persistentDataPath + "TileHop.json";
     }
 
     private void Start()
     {        
-        //LoadJsonData();
+        LoadJsonData();
         AddDataFromSO();
-        DisplaySongPanel();
+        DisplaySongPanel();        
+    }
+    
+    private void OnApplicationQuit()
+    {
+        AddSongDataToJson();
+    
     }
 
     public void AddDataFromSO()
-    {
-        //for(int i=0; i<So_SongData.Count; i++)
-        //{
-
-        //    //AddSongData(So_SongData[i].SongName, So_SongData[i].SongImage);
-        //}
+    {        
         AddSongData currentSong = So_SongData.Find(u => u.SongName == _currentSong);
         if (currentSong != null)
         {
             ScoreManager.Inst.HighScore = currentSong.HighScore;
             BallController.Inst.SoundToPlay(currentSong.audioTrack);
             AudioManager.Inst.LengthOfAudio(currentSong.audioTrack);
+            AddSongDataToJson();
         }
     }
 
-    //public void AddSongData(string songName, Sprite songImage)
-    //{
-    //    SongData songData = new();
-    //    songData.SongName = songName;
-    //    songData.SongImage = songImage;
-    //    songData.scoreData = new();
+    public void DisplayNewData()
+    {
+        for (int i = 0; i < _clonedPrefabs.Count; i++)
+        {
+            _clonedPrefabs[i].GetComponent<SongPanel>().HighScore.text = So_SongData[i].HighScore.ToString();            
+        }
+    }
 
-    //    playerData.songData.Add(songData);
-    //}
+    public void AddSongDataToJson()
+    {
+        gameData.songData.Clear();
+        for (int i = 0; i < So_SongData.Count; i++)
+        {
+            SongData songData = new();
+            songData.SongName = So_SongData[i].SongName;
+            songData.HighScore = So_SongData[i].HighScore;
+            gameData.songData.Add(songData);
+        }
+        SaveJsonData();
+    }
 
     public void AddPlayerScore(int highScore)
     {        
-        //SongData currentSong = playerData.songData.Find(u => u.SongName == _currentSong);
-        //Debug.Log("Current: " + currentSong.SongName);
-        //if(currentSong != null)
-        //{
-        //    currentSong.scoreData.Score = score;
-        //    currentSong.scoreData.HighScore = highScore;
-        //}
-
         AddSongData currentSong = So_SongData.Find(u => u.SongName == _currentSong);        
         if(currentSong != null)
         {
-            currentSong.HighScore = highScore;
+            currentSong.HighScore = highScore;            
         }
     }
 
     public void CurrentSong(string songName)
     {
         _currentSong = songName;
-        Debug.Log(_currentSong);
+        Debug.Log(_currentSong);        
     }
 
-    //public void SaveJsonData()
-    //{
-    //    string path = Path;
-    //    File.WriteAllText(path, JsonUtility.ToJson(playerData));
-    //}
+    public void SaveJsonData()
+    {
+        if (File.Exists(Path))
+        {
+            File.Delete(Path);
+        }
+        File.WriteAllText(Path, JsonUtility.ToJson(gameData));        
+    }
 
-    //public void LoadJsonData()
-    //{
-    //    if (File.Exists(Path))
-    //    {
-    //        string json = File.ReadAllText(Path);
-    //        playerData = JsonUtility.FromJson<PlayerData>(json);
+    public void LoadJsonData()
+    {
+        if (File.Exists(Path))
+        {                        
+            string json = File.ReadAllText(Path);
+            gameData = JsonUtility.FromJson<GameData>(json);
 
-    //        Debug.Log("Json: " + json);
-    //    }
-    //    else
-    //        Debug.LogError("File Doesn't Exist");
-    //}
+            Debug.Log("Json: " + json);
+        }
+        else
+            Debug.LogError("File Doesn't Exist");
+    }
 
     public void DisplaySongPanel()
     {
         for (int i = 0; i < So_SongData.Count; i++)
         {
-            GameObject songPanelClone = Instantiate(_songPanel, _parentContent.transform);
-            SongPanel displaySongPanel = songPanelClone.GetComponent<SongPanel>();
+            GameObject SongPanelClone = Instantiate(_songPanel, _parentContent.transform);
+            SongPanel displaySongPanel = SongPanelClone.GetComponent<SongPanel>();             
             displaySongPanel.SongName.text = So_SongData[i].SongName;
             displaySongPanel.SongImage.sprite = So_SongData[i].SongImage;
             displaySongPanel.HighScore.text = ""+ So_SongData[i].HighScore;
+            _clonedPrefabs.Add(SongPanelClone);
         }
     }
 }
 
-//[System.Serializable]
-//public class PlayerData
-//{
-//    public List<SongData> songData = new();
-//}
+[System.Serializable]
+public class GameData
+{
+    public List<SongData> songData;
+}
 
-//[System.Serializable]
-//public class SongData
-//{
-//    public string SongName;
-//    public Sprite SongImage;
-//    public ScoreData scoreData = new();
-//}
-
-//[System.Serializable]
-//public class ScoreData
-//{
-//    public string Score;
-//    public string HighScore;
-//}
+[System.Serializable]
+public class SongData
+{
+    public string SongName;
+    public int HighScore;
+}
