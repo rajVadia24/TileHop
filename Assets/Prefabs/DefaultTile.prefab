@@ -137,3 +137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parent: {fileID: 3972491013036018116}
+  animationDuration: 0.3
+  targetScaleMultiplier: 1.3
+  hitColor: {r: 1, g: 0, b: 0.05882353, a: 0.78039217}
+  colorChangeDuration: 0.3
+  tileMaterial: {fileID: 2100000, guid: 39054ec0e3bd84deca18d8d250ba092b, type: 2}
