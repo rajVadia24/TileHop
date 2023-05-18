@@ -27,7 +27,7 @@ public class TileController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
-        {
+        {            
             ScoreManager.Inst.Score += 1;            
             BallController.Inst.GetNextTilePosition(NextTilePosition().transform.position);
             SpawnManager.Inst.SpawnedList.Remove(_parent);
