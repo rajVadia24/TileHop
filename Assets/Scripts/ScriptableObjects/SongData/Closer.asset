@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SongName: Closer
   HighScore: 0
-  SongImage: {fileID: 21300000, guid: 0f061b4bd0275bc4eb60f2af31e7375a, type: 3}
+  SongImage: {fileID: 21300000, guid: 43a9684524c624221ba58e1b6a6d679f, type: 3}
   audioTrack: 2

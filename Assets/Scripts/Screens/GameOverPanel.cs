@@ -17,8 +17,8 @@ public class GameOverPanel : BaseClass
 
     public void DisplayScore()
     {
-        _score.text = "Score: 0" + ScoreManager.Inst.Score;
-        _highScore.text = "HighScore: 0" + ScoreManager.Inst.HighScore;
+        _score.text = "Score: " + ScoreManager.Inst.Score;
+        _highScore.text = "HighScore: " + ScoreManager.Inst.HighScore;
     }
 
     public void OnClick_MainMenuButton()

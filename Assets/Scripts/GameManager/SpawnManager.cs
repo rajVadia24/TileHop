@@ -35,13 +35,7 @@ public class SpawnManager : MonoBehaviour
     private void OnEnable()
     {
         OnSpawnTile += SpawnTile;
-    }
-
-    private void Update()
-    {
-       // if (!IsInvoking(nameof(SpawnTile)))
-         //   Invoke(nameof(SpawnTile), 1f);
-    }
+    }    
 
     private void InitializeSpawnPointPositions()
     {
@@ -50,8 +44,9 @@ public class SpawnManager : MonoBehaviour
         _initialSpawnPointPositions.Add(_tileSpawnPointRight.position);
     }
 
-    private void SpawnTile()
+    public void SpawnTile()
     {
+        //Debug.Log("TILE SPAWNED");
         for (int i = 0; i < 8; i++)
         {
             GameObject tile = ObjectPooling.Inst.ObjectToPool();

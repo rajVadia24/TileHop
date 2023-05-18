@@ -28,8 +28,9 @@ public class DataManager : MonoBehaviour
     private void Start()
     {        
         LoadJsonData();
+        LoadDataToSO();
         AddDataFromSO();
-        DisplaySongPanel();        
+        DisplaySongPanel();
     }
     
     private void OnApplicationQuit()
@@ -55,6 +56,14 @@ public class DataManager : MonoBehaviour
         for (int i = 0; i < _clonedPrefabs.Count; i++)
         {
             _clonedPrefabs[i].GetComponent<SongPanel>().HighScore.text = So_SongData[i].HighScore.ToString();            
+        }
+    }
+
+    private void LoadDataToSO()
+    {
+        for (int i = 0; i < gameData.songData.Count; i++)
+        {            
+            So_SongData[i].HighScore = gameData.songData[i].HighScore;            
         }
     }
 

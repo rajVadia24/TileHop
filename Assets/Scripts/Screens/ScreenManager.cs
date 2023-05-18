@@ -8,7 +8,7 @@ public class ScreenManager : MonoBehaviour
     
     public GameOverPanel GameOverObj;
 
-    public static ScreenManager Inst;
+    public static ScreenManager Inst;    
 
     private void Awake()
     {
@@ -24,7 +24,7 @@ public class ScreenManager : MonoBehaviour
     private void Start()
     {
         if(CurrentScreen != null)
-            CurrentScreen.canvas.enabled = true;
+            CurrentScreen.canvas.enabled = true;        
     }
 
     public void ShowNextScreen(ScreenType screenType)
@@ -52,9 +52,6 @@ public class ScreenManager : MonoBehaviour
         {
             BallController.Inst.enabled = false;
             DataManager.Inst.DisplayNewData();            
-            //DataManager.Inst.DisplaySongPanel();
-            //DataManager.Inst.SaveJsonData();
-            //DataManager.Inst.LoadJsonData();
         }
     }
 }
