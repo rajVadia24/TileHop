@@ -17,7 +17,7 @@ public class SongPanel : MonoBehaviour
     private void OnClick_PlayGameButton()
     {
         DataManager.Inst.CurrentSong(SongName.text);
-        DataManager.Inst.AddDataFromSO();        
+        //DataManager.Inst.AddDataFromSO();        
         ScreenManager.Inst.ShowNextScreen(ScreenType.GamePlayScreen);
     }
 }

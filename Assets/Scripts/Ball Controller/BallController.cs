@@ -2,12 +2,15 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class BallController : MonoBehaviour
 {
     public static BallController Inst;
 
-    private InputManager _inputManager;    
+    private InputManager _inputManager;
+
+    public Tags _tag;
 
     [SerializeField] private float _mouseSpeed;
     [SerializeField] private float _height;    
@@ -31,6 +34,8 @@ public class BallController : MonoBehaviour
     public float Distance { get => _distance; }
     public float StartTime { get => _startTime; }
     public float ConstantSpeed { get => _constantSpeed; set => _constantSpeed = value; }
+
+    public Material CloneMaterial;
 
     private Action OnMovingToTile;
 
@@ -87,11 +92,12 @@ public class BallController : MonoBehaviour
     }    
 
     private void ControlBallViaInput(InputAction.CallbackContext context)
-    {        
+    {
+        
         Debug.Log("Input Working");
         Vector2 input = context.ReadValue<Vector2>();
 
-        float horizontalMovement = -input.x * _sensitivitySlider.value * Time.deltaTime;
+        float horizontalMovement = -input.x * 0.04f * Time.deltaTime;
 
         Vector3 newPosition = transform.position + new Vector3(horizontalMovement, 0f, 0f);        
         Vector3 viewportPosition = _mainCamera.WorldToViewportPoint(newPosition);
@@ -119,10 +125,10 @@ public class BallController : MonoBehaviour
 
         if (_distance < 2)
         {
-            _height = 1.2f;
-            if (_distance < 1) { _height = 1f; }
+            _height = 1.3f;
+            if (_distance < 1) { _height = 1.1f; }
         }
-        else { _height = 1.6f; }
+        else { _height = 1.7f; }
 
         float totalTime = _distance / ConstantSpeed;
 
@@ -130,8 +136,7 @@ public class BallController : MonoBehaviour
         float currentHeight = _height * (_timeFraction - _timeFraction * _timeFraction);
         Vector3 moveTowardsTile = Vector3.Lerp(_startPosition, _endPosition, _timeFraction) + Vector3.up * currentHeight;
         transform.position = new Vector3(transform.position.x, moveTowardsTile.y, moveTowardsTile.z);
-
-        //Debug.Log("EndPosition: " + _endPosition);
+        
         if (transform.position == _endPosition)
         {
             _startPosition = _endPosition;
@@ -151,8 +156,7 @@ public class BallController : MonoBehaviour
         OnMovingToTile -= MoveTowardsTile;
         AudioManager.Inst.StopSound();
         ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
-        ScreenManager.Inst.GameOverObj.DisplayScore();
-        //SpawnManager.Inst.enabled = false;
+        ScreenManager.Inst.GameOverObj.DisplayScore();        
     }
 
     public void Restart()
@@ -165,8 +169,7 @@ public class BallController : MonoBehaviour
         _startTile.transform.position = Vector3.zero;
         Vector3 ballStartPosition = _startTile.transform.position;
         transform.position = ballStartPosition;
-        _inputManager.Player.Enable();
-        //SpawnManager.Inst.enabled = true;
+        _inputManager.Player.Enable();        
         SpawnManager.Inst.ResetSpawnPoints();
         SpawnManager.Inst.ResetSpawnedTiles();
         SpawnManager.Inst.OnSpawnTile.Invoke();
@@ -174,12 +177,14 @@ public class BallController : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
+    {        
         isColliding = true;
+        TileController tileClone = collision.gameObject.GetComponent<TileController>();
+        tileClone.TileEffects();
     }
 
     private void OnCollisionExit(Collision collision)
     {
         isColliding = false;
-    }  
+    }   
 }

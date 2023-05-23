@@ -52,6 +52,7 @@ public class ScreenManager : MonoBehaviour
         {
             BallController.Inst.enabled = false;
             DataManager.Inst.DisplayNewData();            
+            DataManager.Inst.SaveJsonData();            
         }
     }
 }

@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab296908d2edd4c62a9d797349e06fc1, type: 3}
   m_Name: UnderTale
   m_EditorClassIdentifier: 
-  SongName: UnderTale
-  HighScore: 0
-  SongImage: {fileID: 0}
-  audioTrack: 1
+  songData:
+  - SongName: 
+    HighScore: 0
+    SongImage: {fileID: 0}
+    audioTrack: 0
+  - SongName: 
+    HighScore: 0
+    SongImage: {fileID: 0}
+    audioTrack: 0

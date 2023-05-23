@@ -86,16 +86,13 @@ public class AudioManager : MonoBehaviour
                 if (songProgress >= _speedThresholds[i])
                 {
                     BallController.Inst.ConstantSpeed = _speedValues[i];                    
-                    //Debug.Log("Score is " + (speedThresholds[i] * 100) + "%");
                 }
                 else
                 {
                     break;
-                }                
-
-                //Debug.Log("PROGRESS ==> " + songProgress);
+                }
             }
-        }        
+        }
     }
 
     [System.Serializable]

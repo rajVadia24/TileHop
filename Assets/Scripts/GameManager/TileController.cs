@@ -5,13 +5,14 @@ public class TileController : MonoBehaviour
 {
     [SerializeField] private GameObject _parent;
     [SerializeField] private float animationDuration = 0.2f;
-    [SerializeField] private float targetScaleMultiplier = 1.2f;
-    [SerializeField] private Material tileMaterial;
-    [SerializeField] private float colorChangeDuration = 60f;
+    [SerializeField] private float targetScaleMultiplier = 1.2f;    
+    [SerializeField] private float colorChangeDuration;
     [SerializeField] private Color constantColor = Color.black;
     [SerializeField] private Color[] tileColors = { Color.blue, Color.green, Color.magenta, Color.yellow, Color.red };
 
-    public Color HitColor;
+    private Material _mat;
+
+    private Color ColorChange;    
 
     private Vector3 originalScale;
     private Color originalColor;
@@ -36,9 +37,9 @@ public class TileController : MonoBehaviour
 
     private void Start()
     {
+        _mat = GetComponent<MeshRenderer>().materials[1];
         originalScale = transform.localScale;
-        //tileMaterial = GetComponent<Renderer>().material;
-        originalColor = tileMaterial.color;
+        originalColor = _mat.color;
     }
 
     private void ReUseTile()
@@ -47,18 +48,24 @@ public class TileController : MonoBehaviour
     }
 
     private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag(_player))
+    {        
+        if (collision.gameObject.GetComponent<BallController>()._tag == Tags.Player)
         {
-            StartCoroutine(ResizeAnimation());
-            StartCoroutine(ColorChangeAnimation());
+            Debug.Log("COLLISON");
+      
 
             ScoreManager.Inst.Score += 1;
             BallController.Inst.GetNextTilePosition(NextTilePosition().transform.position);
             SpawnManager.Inst.SpawnedList.Remove(_parent);
-            Invoke(nameof(ReUseTile), 1);
+            Invoke(nameof(ReUseTile), 2f);
             SpawnManager.Inst.OnSpawnTile.Invoke();
         }
+    }
+
+    public void TileEffects()
+    {
+        StartCoroutine(ColorChangeAnimation());
+        StartCoroutine(ResizeAnimation());
     }
 
     private IEnumerator ResizeAnimation()
@@ -82,16 +89,22 @@ public class TileController : MonoBehaviour
         Color endColor = tileColors[Random.Range(0, tileColors.Length)];
 
         float timer = 0f;
-        float colorChangeDuration = 0.5f; // Duration for changing color
+        //colorChangeDuration = 0.5f;
 
         while (timer < colorChangeDuration)
         {
             timer += Time.deltaTime;
             float t = Mathf.Clamp01(timer / colorChangeDuration);
-            tileMaterial.color = Color.Lerp(startColor, endColor, t);
+            ColorChange = Color.Lerp(startColor, endColor, t); 
+            _mat.color = Color.Lerp(startColor, endColor, t);
             yield return null;
         }
 
-        tileMaterial.color = constantColor;
+        _mat.color = originalColor;
     }
+}
+
+public enum Tags
+{
+    Player,
 }

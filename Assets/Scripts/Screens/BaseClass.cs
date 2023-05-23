@@ -25,4 +25,5 @@ public enum ScreenType
     HomeScreen,
     GamePlayScreen,
     GameOverPanel,
+    Settings,
 }

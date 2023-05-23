@@ -47,7 +47,7 @@ public class SpawnManager : MonoBehaviour
     public void SpawnTile()
     {
         //Debug.Log("TILE SPAWNED");
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 5; i++)
         {
             GameObject tile = ObjectPooling.Inst.ObjectToPool();
 

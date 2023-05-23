@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 02ee5a72f849cdb4783c0fe2d0d996fd
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Segoe Script
+  fontNames:
+  - Segoe Script
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: dc6bd4ad8a935f54fa8e4082db0ca27e, type: 3}
+  - {fileID: 12800000, guid: 039ba9ee1e26e524ebd84f1e70fd1ca0, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
