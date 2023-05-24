@@ -52,18 +52,42 @@ public class BallController : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputManager.Player.Enable();
+        //_inputManager.Player.Enable();
         _inputManager.Player.Movement.performed += ControlBallViaInput;
         _inputManager.Player.StartGame.started += StartGame;
+
+        GameStateManager.OnGameStateChange += StateChange;
     }
+
 
     private void OnDisable()
     {
-        _inputManager.Player.Disable();
+        //_inputManager.Player.Disable();
         _inputManager.Player.Movement.performed -= ControlBallViaInput;
         _inputManager.Player.StartGame.started -= StartGame;
+
+        GameStateManager.OnGameStateChange -= StateChange;
     }
    
+    private void StateChange(GameStates gs)
+    {
+        switch (gs)
+        {
+            case GameStates.GamePlay:
+                Debug.Log("--GamePlay--");
+
+                _inputManager.Player.Enable();
+                break;
+
+            case GameStates.GameOver:
+                Debug.Log("--GameOver--");
+
+                _inputManager.Player.Disable();
+                break;
+        }        
+    }
+
+
     private void FixedUpdate()
     {
         if (isPlaying)
@@ -151,9 +175,9 @@ public class BallController : MonoBehaviour
     private void GameOver()
     {        
         Debug.LogError("Game Over");
-        isPlaying = false;
-        _inputManager.Player.Disable();
-        OnMovingToTile -= MoveTowardsTile;
+        //isPlaying = false;
+        //_inputManager.Player.Disable();
+        //OnMovingToTile -= MoveTowardsTile;
         AudioManager.Inst.StopSound();
         ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
         ScreenManager.Inst.GameOverObj.DisplayScore();        
@@ -169,7 +193,7 @@ public class BallController : MonoBehaviour
         _startTile.transform.position = Vector3.zero;
         Vector3 ballStartPosition = _startTile.transform.position;
         transform.position = ballStartPosition;
-        _inputManager.Player.Enable();        
+        //_inputManager.Player.Enable();        
         SpawnManager.Inst.ResetSpawnPoints();
         SpawnManager.Inst.ResetSpawnedTiles();
         SpawnManager.Inst.OnSpawnTile.Invoke();
@@ -186,5 +210,7 @@ public class BallController : MonoBehaviour
     private void OnCollisionExit(Collision collision)
     {
         isColliding = false;
-    }   
+    }
+
+
 }

@@ -46,11 +46,13 @@ public class ScreenManager : MonoBehaviour
         if(screenType == ScreenType.GamePlayScreen)
         {
             AudioManager.Inst.StopSound();
-            BallController.Inst.enabled = true;
+            GameStateManager.inst.ChangeState(GameStates.GamePlay);
+            //BallController.Inst.enabled = true;
         }
         else if(screenType == ScreenType.HomeScreen)
         {
-            BallController.Inst.enabled = false;
+            GameStateManager.inst.ChangeState(GameStates.HomeScreen);
+            //BallController.Inst.enabled = false;
             DataManager.Inst.DisplayNewData();            
             DataManager.Inst.SaveJsonData();            
         }
