@@ -55,6 +55,7 @@ public class TileController : MonoBehaviour
       
 
             ScoreManager.Inst.Score += 1;
+            ScoreManager.Inst._scoreText.text = "Score: " + ScoreManager.Inst.Score;
             BallController.Inst.GetNextTilePosition(NextTilePosition().transform.position);
             SpawnManager.Inst.SpawnedList.Remove(_parent);
             Invoke(nameof(ReUseTile), 2f);

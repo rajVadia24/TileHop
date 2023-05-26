@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
-using System.Collections;
 
 public class BallController : MonoBehaviour
 {
@@ -51,8 +50,7 @@ public class BallController : MonoBehaviour
     }
 
     private void OnEnable()
-    {
-        //_inputManager.Player.Enable();
+    {        
         _inputManager.Player.Movement.performed += ControlBallViaInput;
         _inputManager.Player.StartGame.started += StartGame;
 
@@ -60,14 +58,13 @@ public class BallController : MonoBehaviour
     }
 
 
-    private void OnDisable()
-    {
-        //_inputManager.Player.Disable();
-        _inputManager.Player.Movement.performed -= ControlBallViaInput;
-        _inputManager.Player.StartGame.started -= StartGame;
+    //private void OnDisable()
+    //{        
+    //    _inputManager.Player.Movement.performed -= ControlBallViaInput;
+    //    _inputManager.Player.StartGame.started -= StartGame;
 
-        GameStateManager.OnGameStateChange -= StateChange;
-    }
+    //    GameStateManager.OnGameStateChange -= StateChange;
+    //}
    
     private void StateChange(GameStates gs)
     {
@@ -75,18 +72,20 @@ public class BallController : MonoBehaviour
         {
             case GameStates.GamePlay:
                 Debug.Log("--GamePlay--");
-
                 _inputManager.Player.Enable();
                 break;
 
             case GameStates.GameOver:
                 Debug.Log("--GameOver--");
-
+                isPlaying = false;                
                 _inputManager.Player.Disable();
+                break;
+
+            case GameStates.HomeScreen:
+                Debug.Log("Home");
                 break;
         }        
     }
-
 
     private void FixedUpdate()
     {
@@ -101,13 +100,13 @@ public class BallController : MonoBehaviour
 
     private void StartGame(InputAction.CallbackContext context)
     {
-        _inputManager.Player.StartGame.Disable();
         Debug.Log("STARTED GAME");
+        _inputManager.Player.StartGame.Disable();
         isPlaying = true;
         _startTime = Time.time;
         _startPosition = transform.position;
-        _endPosition = SpawnManager.Inst.SpawnedList[0].transform.position;        
-        AudioManager.Inst.PlaySound(_songName);        
+        _endPosition = SpawnManager.Inst.SpawnedList[0].transform.position;
+        AudioManager.Inst.PlaySound(_songName);
     }
 
     public void SoundToPlay(AudioTrack song)
@@ -174,10 +173,7 @@ public class BallController : MonoBehaviour
     
     private void GameOver()
     {        
-        Debug.LogError("Game Over");
-        //isPlaying = false;
-        //_inputManager.Player.Disable();
-        //OnMovingToTile -= MoveTowardsTile;
+        Debug.LogError("Game Over");        
         AudioManager.Inst.StopSound();
         ScreenManager.Inst.ShowNextScreen(ScreenType.GameOverPanel);
         ScreenManager.Inst.GameOverObj.DisplayScore();        
@@ -185,15 +181,12 @@ public class BallController : MonoBehaviour
 
     public void Restart()
     {
-        ConstantSpeed = 1.5f;
-        OnMovingToTile += MoveTowardsTile;
-        _inputManager.Player.StartGame.Enable();              
         Debug.Log("Restart");
+        ConstantSpeed = 1.5f;                   
         _timeFraction = 0;
         _startTile.transform.position = Vector3.zero;
         Vector3 ballStartPosition = _startTile.transform.position;
-        transform.position = ballStartPosition;
-        //_inputManager.Player.Enable();        
+        transform.position = ballStartPosition;          
         SpawnManager.Inst.ResetSpawnPoints();
         SpawnManager.Inst.ResetSpawnedTiles();
         SpawnManager.Inst.OnSpawnTile.Invoke();

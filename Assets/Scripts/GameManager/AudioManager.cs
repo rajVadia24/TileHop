@@ -24,8 +24,7 @@ public class AudioManager : MonoBehaviour
     private void Update()
     {        
         Debug.Log("AudioTime==> " + audioSource.time);
-        IncreaseSpeedWithSong();
-        //OnStopTileSpawn.Invoke();
+        IncreaseSpeedWithSong();        
     }
 
     public void PlaySound(AudioTrack name)
@@ -46,22 +45,7 @@ public class AudioManager : MonoBehaviour
     public void StopSound()
     {        
         audioSource.Stop();        
-    }
-
-    //public void StopTileSpawning()
-    //{
-    //    if (audioSource.isPlaying == false)
-    //    {
-    //        Debug.LogWarning("SONG End!");
-    //        SpawnManager.Inst.OnSpawnTile = null;
-    //        OnStopTileSpawn = null;
-    //    }
-    //    else if (audioSource.isPlaying == true)
-    //    {
-    //        Debug.LogWarning("SONG Started!");
-    //        SpawnManager.Inst.OnSpawnTile += SpawnManager.Inst.SpawnTile;            
-    //    }
-    //}
+    }  
 
     public void LengthOfAudio(AudioTrack currentSong)
     {

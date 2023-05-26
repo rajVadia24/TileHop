@@ -5,7 +5,7 @@ public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager Inst;     
 
-    [SerializeField] private TMP_Text _scoreText;    
+    public TMP_Text _scoreText;    
 
     private int _score = 0;
     private int _highScore;        
@@ -21,10 +21,5 @@ public class ScoreManager : MonoBehaviour
     private void Start()
     {        
         _scoreText.text = "Score: " + Score;        
-    }        
-
-    private void Update()
-    {
-        _scoreText.text = "Score: " + Score;        
-    }    
+    }               
 }
