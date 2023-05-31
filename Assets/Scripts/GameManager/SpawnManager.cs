@@ -18,7 +18,9 @@ public class SpawnManager : MonoBehaviour
     private int _nextBeatIndex = 0;
 
     public int NextBeatIndex { get => _nextBeatIndex; set => _nextBeatIndex = value; }
-
+        
+    private float _timer;
+   
     private void Awake()
     {
         Inst = this;
@@ -29,13 +31,18 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
-        SpawnTile();
+        OnSpawnTile?.Invoke();
     }
 
     private void OnEnable()
     {
-        OnSpawnTile += SpawnTile;
-    }    
+        OnSpawnTile += SpawnTile;        
+    }
+
+    private void OnDisable()
+    {
+        OnSpawnTile = null;        
+    }
 
     private void InitializeSpawnPointPositions()
     {
@@ -46,7 +53,7 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnTile()
     {
-        //Debug.Log("TILE SPAWNED");
+        Debug.Log("TILE SPAWNED");
         for (int i = 0; i < 5; i++)
         {
             GameObject tile = ObjectPooling.Inst.ObjectToPool();
@@ -60,8 +67,8 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    private Transform RandomSpawnGenerator()
-    {
+    public Transform RandomSpawnGenerator()
+    {        
         float randomSpeed = UnityEngine.Random.Range(0.5f, 2);
         Vector3 newPosition = Vector3.back * randomSpeed;
         _tileSpawnPointLeft.position += newPosition;
@@ -87,7 +94,7 @@ public class SpawnManager : MonoBehaviour
             tile.SetActive(false);
         }
         SpawnedList.Clear();
-    }
+    }    
 }
 
 

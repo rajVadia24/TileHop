@@ -20,7 +20,6 @@ public class GameStateManager : MonoBehaviour
         CurrentState = gs;
         OnGameStateChange?.Invoke(gs);
     }
-
 }
 
 public enum GameStates

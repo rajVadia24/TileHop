@@ -23,7 +23,7 @@ public class AudioManager : MonoBehaviour
   
     private void Update()
     {        
-        Debug.Log("AudioTime==> " + audioSource.time);
+        //Debug.Log("AudioTime==> " + audioSource.time);
         IncreaseSpeedWithSong();        
     }
 

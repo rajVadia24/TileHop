@@ -1,44 +1,53 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ManualBeatDetector : MonoBehaviour
 {
-    [SerializeField] private List<float> _clickTimes = new();
+    public static ManualBeatDetector inst;
+    
+    public SpawnData SO_SpawnData;
 
-    bool start;
+    [SerializeField] private GameObject _spawnPrefab;
+        
+    private float _timer;
+    private float _spawnTimer;
+
+    private void Awake()
+    {
+        inst = this;
+    }
 
     private void Update()
     {
+        _timer += Time.deltaTime;
         if (Input.GetMouseButtonDown(0))
-        {
-            _clickTimes.Add(Time.time);
-        }
+        {                                   
+            GameObject tile = Instantiate(_spawnPrefab);
+            tile.transform.position = SpawnManager.Inst.RandomSpawnGenerator().position * (_timer * 10f);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            start = true;
-        }
-
-        if (start)
-        {
-            GetClickTimes();
-        }
+            SO_SpawnData.Spawn.Add(tile.transform.position);
+            _timer = 0;
+        }        
     }
 
-    public void GetClickTimes()
+    private void SpawnOnBeats()
     {
-        for (int i = 0; i < _clickTimes.Count; i++)
-        {
-            if (i == 0)
-            {
-                Debug.Log("Click at time: " + _clickTimes[i]);
-            }
-            else
-            {
-                float timeDiff = _clickTimes[i] - _clickTimes[i - 1];
-                Debug.Log("Time elapsed from previous click: " + timeDiff);
-                Debug.Log("Click at time: " + _clickTimes[i]);
-            }
-        }
+        _timer += Time.deltaTime;
+
+        Debug.Log("Pressed");
+        float time = Mathf.Round(_timer * 100f) / 100f;
+        float tileDistance = _timer / 10f;
+
+        //for (int i = 0; i < SO_ClickData.Clicks.Count; i++)
+        //{
+        //    if (time == SO_ClickData.Clicks[i])
+        //    {
+        Debug.Log("SPAWN TILE");
+        GameObject tile = Instantiate(_spawnPrefab);
+        tile.transform.position = SpawnManager.Inst.RandomSpawnGenerator().position * tileDistance;
     }
 }
+    
+
+

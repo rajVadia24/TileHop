@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songData:
   - SongName: Call Me Maybe
-    HighScore: 0
+    HighScore: 1
     SongImage: {fileID: 21300000, guid: 2947ec23c6f7044b98e3dffa20c4ce74, type: 3}
     audioTrack: 3
   - SongName: Closer
-    HighScore: 1
+    HighScore: 28
     SongImage: {fileID: 21300000, guid: 43a9684524c624221ba58e1b6a6d679f, type: 3}
     audioTrack: 2
   - SongName: Shape of You

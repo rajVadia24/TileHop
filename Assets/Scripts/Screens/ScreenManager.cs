@@ -55,8 +55,8 @@ public class ScreenManager : MonoBehaviour
 
             case ScreenType.GamePlayScreen:
 
-                GameStateManager.inst.ChangeState(GameStates.GamePlay);
-                AudioManager.Inst.StopSound();                
+                GameStateManager.inst.ChangeState(GameStates.GamePlay);                
+                AudioManager.Inst.StopSound();
                 //BallController.Inst.enabled = true;
                 break;
 

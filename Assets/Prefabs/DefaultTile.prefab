@@ -45,27 +45,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.367415
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.18867706
+      value: 0.14
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.367415
+      value: 0.29
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -0.000096615
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.009
+      value: -0.0040731
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.0028217
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 960e5acb5c5a94d17814423b9f70a0c9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -137,8 +137,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parent: {fileID: 3972491013036018116}
-  animationDuration: 0.2
-  targetScaleMultiplier: 1.2
+  animationDuration: 0.26
+  targetScaleMultiplier: 1.3
   colorChangeDuration: 0.6
   constantColor: {r: 0, g: 0, b: 0, a: 1}
   tileColors:

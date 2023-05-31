@@ -13,12 +13,7 @@ public class BaseClass : MonoBehaviour
     {                    
         canvas = GetComponent<Canvas>();
         canvas.enabled = false;
-    }
-
-    private void Start()
-    {
-        Debug.LogError("YOLO");
-    }
+    }   
 }
 
 public enum ScreenType

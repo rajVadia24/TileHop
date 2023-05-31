@@ -4,8 +4,8 @@ using UnityEngine;
 public class TileController : MonoBehaviour
 {
     [SerializeField] private GameObject _parent;
-    [SerializeField] private float animationDuration = 0.2f;
-    [SerializeField] private float targetScaleMultiplier = 1.2f;    
+    [SerializeField] private float animationDuration;// = 0.2f;
+    [SerializeField] private float targetScaleMultiplier;// = 1.2f;    
     [SerializeField] private float colorChangeDuration;
     [SerializeField] private Color constantColor = Color.black;
     [SerializeField] private Color[] tileColors = { Color.blue, Color.green, Color.magenta, Color.yellow, Color.red };
@@ -56,7 +56,7 @@ public class TileController : MonoBehaviour
 
             ScoreManager.Inst.Score += 1;
             ScoreManager.Inst._scoreText.text = "Score: " + ScoreManager.Inst.Score;
-            BallController.Inst.GetNextTilePosition(NextTilePosition().transform.position);
+            BallController.Inst?.GetNextTilePosition(NextTilePosition().transform.position);
             SpawnManager.Inst.SpawnedList.Remove(_parent);
             Invoke(nameof(ReUseTile), 2f);
             SpawnManager.Inst.OnSpawnTile.Invoke();
